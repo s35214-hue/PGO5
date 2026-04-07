@@ -10,7 +10,7 @@ public class Policy {
     private boolean hasAlarm;
     private boolean claimFreeClient;
     private static int createdPolicyCount;
-    private static final double ADMINISTRATIVE_FEE = 50.0;
+    private static final double ADMINISTRATIVE_FEE = 100.0;
 
     public Policy(String policyNumber, String clientName, double basePremium, int riskLevel, double vehicleValue, boolean hasAlarm, boolean claimFreeClient) {
 
@@ -65,14 +65,60 @@ public class Policy {
 
     } public double calculateFinalPremium() {
 
-        double finalPremium = basePremium + 10 + ((double) riskLevel * 0.5);
+        double finalPremium = basePremium + ADMINISTRATIVE_FEE + (riskLevel * 120);
 
-        return finalPremium;
+        if(vehicleValue > 50000) {
+
+            finalPremium += 100;
+
+        } if(hasAlarm) {
+
+            finalPremium = finalPremium - (finalPremium * 0.05);
+
+        } if(claimFreeClient) {
+
+            finalPremium = finalPremium - (finalPremium * 0.05);
+
+        } if(finalPremium < (basePremium + ADMINISTRATIVE_FEE)) {
+
+            finalPremium = basePremium + ADMINISTRATIVE_FEE;
+
+        } return finalPremium;
+
 
     } public double calculateRenewalPremium() {
 
-        double renewalPremium = basePremium + basePremium * 0.5;
-        return renewalPremium;
+        double renewalPremium = calculateFinalPremium();
+
+        if(riskLevel > 1) {
+
+            renewalPremium += renewalPremium * 0.1;
+
+        } if(riskLevel == 3) {
+
+            renewalPremium += renewalPremium * 0.1;
+
+        } if(vehicleValue > 50000) {
+
+            renewalPremium += 100;
+
+        } if(claimFreeClient) {
+
+            renewalPremium -= renewalPremium * 0.08;
+
+        } if(hasAlarm) {
+
+            renewalPremium -= renewalPremium * 0.05;
+
+        } if (renewalPremium < (calculateFinalPremium() * 0.9)) {
+
+            renewalPremium = basePremium * 0.9;
+
+        } if (renewalPremium > (calculateFinalPremium() * 1.25)) {
+
+            renewalPremium = calculateFinalPremium() * 1.25;
+
+        } return renewalPremium;
 
 
     } public String getRiskSummary() {

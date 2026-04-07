@@ -82,7 +82,7 @@ public class InsuranceOffice {
         }  return highRisk;
 
 
-    } public void findByNumber (String policyNumber) {
+    } public Policy findByNumber (String policyNumber) {
 
         for (Policy policy : policies) {
 
@@ -90,13 +90,14 @@ public class InsuranceOffice {
 
                 if (policy.getPolicyNumber().equals(policyNumber)) {
 
-                    System.out.println(policy.toString());
+                    return policy;
 
                 }
             }
         }
 
 
+        return null;
     } public void printCheaperThan (double treshold) {
 
         for (Policy policy : policies) {
